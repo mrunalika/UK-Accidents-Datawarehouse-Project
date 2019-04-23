@@ -1,0 +1,128 @@
+MDX queries-
+
+Mining structure
+CREATE MINING STRUCTURE [Accident Severity DMX]
+(
+  [Accident Index] LONG KEY,
+  [Accident Severity] LONG DISCRETE,
+  [Carriageway Hazards] TEXT DISCRETE,
+  [Light Conditions]  LONG DISCRETE,
+  [Local Authority District] LONG DISCRETE,
+  [Local Authority Highway] TEXT DISCRETE,
+  [LSOA Of Accident Location] TEXT DISCRETE,
+  [Police Force] TEXT DISCRETE,
+  [Road Surface Conditions] TEXT DISCRETE,
+  [Speed Limit] LONG DISCRETIZED,
+  [Urban Rural] TEXT DISCRETE,
+ [Weather Conditions] TEXT DISCRETE
+
+)
+WITH HOLDOUT (30 PERCENT or 1000 CASES)
+
+Decision Tree model-
+
+ALTER MINING STRUCTURE [Accident Severity DMX]
+ADD MINING MODEL [Decision Tree DMX]
+(
+  [Accident Index] ,
+  [Accident Severity] PREDICT,
+  [Carriageway Hazards],
+  [Light Conditions] ,
+  [Local Authority District] ,
+  [Local Authority Highway] ,
+  [LSOA Of Accident Location],
+  [Police Force] ,
+  [Road Surface Conditions] ,
+  [Speed Limit] ,
+  [Urban Rural] ,
+ [Weather Conditions] 
+) USING Microsoft_Decision_Trees
+WITH DRILLTHROUGH
+
+INSERT INTO MINING STRUCTURE [Accident Severity DMX]
+(
+  [Accident Index] ,
+  [Accident Severity] ,
+  [Carriageway Hazards],
+  [Light Conditions] ,
+  [Local Authority District] ,
+  [Local Authority Highway] ,
+  [LSOA Of Accident Location],
+  [Police Force] ,
+  [Road Surface Conditions] ,
+  [Speed Limit] ,
+  [Urban Rural] ,
+ [Weather Conditions] 
+)
+OPENQUERY([UK Accidents Database],
+   'SELECT
+   Accident_Index ,
+ Accident_Severity,
+  Carriageway_Hazards,
+ Light_Conditions ,
+ Local_Authority_District ,
+ Local_Authority_Highway ,
+  LSOA_Of_Accident_Location,
+  Police_Force ,
+  Road_Surface_Conditions ,
+  Speed_Limit ,
+  Urban_Rural ,
+ Weather_Conditions
+FROM dbo.DimAccidents')
+DELETE FROM MINING STRUCTURE [Accident Severity DMX]
+
+ALTER MINING STRUCTURE [Accident Severity DMX]
+ADD MINING MODEL [Decision Tree DMX]
+(
+  [Accident Index] ,
+  [Accident Severity] PREDICT,
+  [Carriageway Hazards],
+  [Light Conditions] ,
+  [Local Authority District] ,
+  [Local Authority Highway] ,
+  [LSOA Of Accident Location],
+  [Police Force] ,
+  [Road Surface Conditions] ,
+  [Speed Limit] ,
+  [Urban Rural] ,
+ [Weather Conditions] 
+) USING Microsoft_Decision_Trees
+WITH DRILLTHROUGH
+
+Naïve Bayes structure-
+
+ALTER MINING STRUCTURE [Accident Severity DMX]
+ADD MINING MODEL [Naïve Bayes]
+(
+  [Accident Index] ,
+  [Accident Severity] PREDICT,
+  [Carriageway Hazards],
+  [Light Conditions] ,
+  [Local Authority District] ,
+  [Local Authority Highway] ,
+  [LSOA Of Accident Location],
+  [Police Force] ,
+  [Road Surface Conditions] ,
+  [Speed Limit] ,
+  [Urban Rural] ,
+ [Weather Conditions] 
+) USING Microsoft_Naive_Bayes
+
+Neural Network structure-
+
+ALTER MINING STRUCTURE [Accident Severity DMX]
+ADD MINING MODEL [Neural_Network]
+(
+  [Accident Index] ,
+  [Accident Severity] PREDICT,
+  [Carriageway Hazards],
+  [Light Conditions] ,
+  [Local Authority District] ,
+  [Local Authority Highway] ,
+  [LSOA Of Accident Location],
+  [Police Force] ,
+  [Road Surface Conditions] ,
+  [Speed Limit] ,
+  [Urban Rural] ,
+ [Weather Conditions] 
+) USING Microsoft_Neural_Network
